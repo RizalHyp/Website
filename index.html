@@ -99,7 +99,7 @@ footer{padding-bottom:max(40px,calc(24px + env(safe-area-inset-bottom)))}
 .soc a{width:44px;height:44px}
 .hero .btn{margin:0 6px 10px 0}
 @media(pointer:coarse){.btn,.chip{min-height:44px;display:inline-flex;align-items:center;justify-content:center}}
-@media(max-width:1300px){
+@media(max-width:1400px){
  .menu{display:grid}
  .links{display:none;position:absolute;left:0;right:0;top:100%;background:var(--mist);flex-direction:column;gap:0;padding:6px max(22px,env(safe-area-inset-left)) 16px;border-bottom:1px solid var(--line);box-shadow:0 14px 24px rgba(15,46,61,.12)}
  .links.open{display:flex}
@@ -115,7 +115,7 @@ footer{padding-bottom:max(40px,calc(24px + env(safe-area-inset-bottom)))}
 <canvas id="rain" aria-hidden="true"></canvas><button id="rainBtn" class="chip" type="button" aria-pressed="true">Hujan: nyala</button>
 <div id="site">
 <nav><div class="w"><a class="logo" href="#" onclick="go('top');return false"><img id="logoN" alt="Logo Rizal Hypno Center" width="40" height="40">Rizal Hypno Center</a>
-<div class="links"><a id="navForm">Daftar Terapi</a><a id="navTrain">Daftar Pelatihan</a><a href="#" onclick="go('sertifikat');return false">Unduh Sertifikat</a><a href="#" onclick="go('layanan');return false">Layanan</a><a href="#" onclick="go('profil');return false">Profil</a><a href="#" onclick="go('bayar');return false">Pembayaran</a></div>
+<div class="links"><a id="navForm">Daftar Terapi</a><a id="navTrain">Daftar Pelatihan</a><a href="#" onclick="go('sertifikat');return false">Unduh Sertifikat</a><a href="#" onclick="go('materi');return false">Materi</a><a href="#" onclick="go('layanan');return false">Layanan</a><a href="#" onclick="go('profil');return false">Profil</a><a href="#" onclick="go('bayar');return false">Pembayaran</a></div>
 <a class="btn sm" id="navwa">Tanya via WhatsApp</a><button class="menu" id="menuBtn" type="button" aria-label="Buka menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div></nav>
 <header class="hero"><div class="rings"><i></i><i></i><i></i></div><div class="w">
 <div><h1 id="hTag"></h1><p id="hSub"></p><a class="btn" id="heroForm">Daftar terapi</a> <a class="btn" id="heroTrain">Daftar pelatihan</a> <a class="btn alt" href="#" onclick="go('layanan');return false">Lihat layanan</a> <a class="btn alt" id="heroWa">Konsultasi dulu</a><div class="stat" id="hStat"></div></div>
@@ -124,6 +124,8 @@ footer{padding-bottom:max(40px,calc(24px + env(safe-area-inset-bottom)))}
 <section class="about" id="profil"><div class="w"><div class="portrait" id="aPhoto"></div><div><h2 id="aName"></h2><div class="tag" id="aRole"></div><p id="aBio" style="margin-top:16px"></p><div class="cert"><img id="ibhImg" alt="Logo IBH" width="64" height="64"><span><b>Tersertifikasi IBH</b>The Indonesian Board of Hypnotherapy · CH., CHt.</span></div><div class="soc" id="socA"></div></div></div></section>
 <section id="sertifikat"><div class="w"><h2>Unduh sertifikat</h2><p class="sub">Peserta pelatihan: ketik nama sesuai pendaftaran, pilih jenis pelatihan, lalu cari. Sertifikat bisa diunduh setelah diterbitkan oleh admin.</p>
 <div class="panel" style="max-width:560px"><label>Nama lengkap</label><input id="cqn" autocomplete="name"><label>Jenis pelatihan</label><select id="cqt"></select><p style="margin-top:14px"><button class="btn" data-a="csearch" type="button">Cari sertifikat</button></p><div id="cres" style="margin-top:12px;color:var(--mut)"></div></div></div></section>
+<section id="materi"><div class="w"><h2>Materi pelatihan</h2><p class="sub">Khusus peserta yang sudah membayar. Masukkan kode akses dari admin untuk mengunduh materi pelatihan Anda.</p>
+<div class="panel" style="max-width:560px"><label>Kode akses</label><input id="mk" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase"><p style="margin-top:14px"><button class="btn" data-a="mopen" type="button">Buka materi</button></p><div id="mres" style="margin-top:12px;color:var(--mut)"></div></div></div></section>
 <section id="bayar"><div class="w"><h2>Informasi pembayaran</h2><p class="sub">Transfer hanya ke rekening resmi di bawah ini, lalu kirim bukti ke WhatsApp.</p><div class="pay" id="pay"></div></div></section>
 <section id="lokasi" style="padding-top:0"><div class="w"><h2>Lokasi</h2><p class="sub" id="locAddr" style="white-space:pre-line"></p><a class="btn alt" id="locMap" style="display:none">Buka di Google Maps</a></div></section>
 <footer><div class="w"><span class="flogo"><img id="logoF" alt="" width="34" height="34"><span id="fAddr"></span></span><div class="soc footer-soc" id="socF"></div><span>© 2026 Rizal Hypno Center · <a href="#admin">Admin</a></span></div></footer>
@@ -175,7 +177,7 @@ function draw(){
 document.addEventListener('click',e=>{const f=e.target.closest('[data-f]');if(f){filter=f.dataset.f;draw()}});
 
 /* ===== Sertifikat ===== */
-let C=null,CD=false,CL=0,CR=[],CUR=null;
+let M=null,MK='',MI=[],C=null,CD=false,CL=0,CR=[],CUR=null;
 const ld=s=>new Promise(ok=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=s});
 const fmtD=d=>d?new Date(d+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'';
 const cfn=c=>'Sertifikat-'+String(c.name).replace(/[^\w]+/g,'-')+'-'+String(c.no).replace(/\W+/g,'');
@@ -234,18 +236,50 @@ async function cSearch(){
     o.innerHTML=CR.length?CR.map((c,i)=>`<div class="panel" style="margin:10px 0 0"><b>${esc(c.name)}</b><br><span class="tag">${esc(c.type)}</span> · ${esc(c.no)}<p style="margin-top:10px"><button class="btn sm" data-a="cview" data-i="${i}" type="button">Lihat &amp; unduh</button></p></div>`).join(''):'Sertifikat belum ditemukan atau belum diterbitkan. Pastikan nama sesuai pendaftaran, atau hubungi admin.';
   }catch(e){o.textContent='Gagal mencari. Coba lagi.'}
 }
-async function loadC(){try{const r=await post({action:'certs_get'});if(r.error)throw r.error;C=r.certs||[];msg(r.added?r.added+' peserta baru dari formulir pelatihan masuk sebagai draft.':r.linked===false?'Folder formulir tidak ditemukan di akun Google ini. Tambahkan peserta secara manual.':'')}catch(e){msg('Gagal memuat sertifikat. Pastikan Code.gs sudah diperbarui (Deploy > Manage deployments > New version).')}adm()}
+async function loadC(){try{const r=await post({action:'certs_get'});if(r.error)throw r.error;const mm=await post({action:'mat_list'});if(mm.error)throw mm.error;C=r.certs||[];M=mm.items||[];msg(r.added?r.added+' peserta baru dari formulir pelatihan masuk sebagai draft.':r.linked===false?'Folder formulir tidak ditemukan di akun Google ini. Tambahkan peserta secara manual.':'')}catch(e){msg('Gagal memuat sertifikat. Pastikan Code.gs sudah diperbarui (Deploy > Manage deployments > New version).')}adm()}
 const cn=()=>{const s=Math.max(0,...C.map(c=>+String(c.no).split('/').pop()||0))+1;return 'RHC/PEL/'+new Date().getFullYear()+'/'+String(s).padStart(4,'0')};
 function certUI(){
   const o=D.services.filter(s=>s.type==='pelatihan').map(s=>`<option value="${esc(s.title)}">`).join('');
   return `<div class="panel"><b>Tambah peserta</b><datalist id="tl">${o}</datalist><div class="row"><div><label>Nama</label><input id="cn"></div><div><label>Jenis pelatihan</label><input id="ct" list="tl"></div><div><label>Tanggal pelatihan</label><input id="cd" type="date"></div></div><p style="margin-top:12px"><button class="btn sm" data-a="cadd">+ Tambah</button> <button class="btn sm alt" data-a="csync">Tarik dari formulir</button></p><label>Impor banyak (satu baris per peserta: nama; jenis pelatihan; tanggal YYYY-MM-DD)</label><textarea id="cb" rows="3"></textarea><p style="margin-top:12px"><button class="btn sm alt" data-a="cimp">Impor</button></p></div>`+
   (C.map((c,i)=>`<div class="panel"><div class="row"><div><label>Nama</label><input data-c="${i}.name" value="${esc(c.name)}"></div><div><label>Jenis pelatihan</label><input list="tl" data-c="${i}.type" value="${esc(c.type)}"></div><div><label>Tanggal</label><input type="date" data-c="${i}.date" value="${esc(c.date)}"></div></div><p style="margin-top:12px"><span class="tag">${esc(c.no)} · ${c.pub?'Diterbitkan':'Draft'}</span></p><p style="margin-top:8px"><button class="btn sm alt" data-a="cprev" data-i="${i}">Pratinjau</button> <button class="btn sm" data-a="cpub" data-i="${i}">${c.pub?'Tarik kembali':'Terbitkan'}</button> <button class="btn sm red" data-a="cdel" data-i="${i}">Hapus</button></p></div>`).join('')||'<div class="empty">Belum ada peserta.</div>');
 }
+const fmtS=n=>n>1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.ceil(n/1024))+' KB';
+const genCode=()=>{const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',r=new Uint8Array(8);crypto.getRandomValues(r);return[...r].map(x=>A[x%32]).join('')};
+async function mOpen(){
+  const k=$('#mk').value.trim(),o=$('#mres');
+  if(k.length<6)return o.textContent='Masukkan kode akses dari admin.';
+  if(!API.startsWith('http'))return o.textContent='Layanan belum tersambung.';
+  o.textContent='Memeriksa…';
+  try{
+    const r=await(await fetch(API+'?materi=1&code='+encodeURIComponent(k))).json();
+    if(r.error)return o.textContent=r.error;
+    MK=k;MI=r.items||[];
+    o.innerHTML='<p>Halo <b>'+esc(r.name)+'</b>, materi untuk <b>'+esc(r.type)+'</b>:</p>'+(MI.length?MI.map((m,i)=>`<div class="panel" style="margin:10px 0 0"><b>${esc(m.title)}</b><br><span class="tag">${esc(m.name)} · ${fmtS(m.size)}</span><p style="margin-top:10px"><button class="btn sm" data-a="mdl" data-i="${i}" type="button">Unduh</button></p></div>`).join(''):'<p>Belum ada materi yang diunggah untuk pelatihan ini.</p>');
+  }catch(e){o.textContent='Gagal memeriksa. Coba lagi.'}
+}
+async function mDl(i,btn){
+  const m=MI[i];btn.textContent='Menyiapkan…';
+  try{
+    const r=await(await fetch(API+'?materi=1&code='+encodeURIComponent(MK)+'&id='+encodeURIComponent(m.id))).json();
+    if(r.error)throw r.error;
+    const bin=atob(r.b64),u=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)u[k]=bin.charCodeAt(k);
+    const url=URL.createObjectURL(new Blob([u],{type:r.mime||'application/octet-stream'})),a=document.createElement('a');
+    a.href=url;a.download=r.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
+  }catch(e){alert('Gagal mengunduh: '+e)}
+  btn.textContent='Unduh';
+}
+function matUI(){
+  const o=D.services.filter(s=>s.type==='pelatihan').map(s=>`<option value="${esc(s.title)}">`).join('');
+  const up=`<div class="panel"><b>Unggah materi</b><datalist id="tl">${o}</datalist><div class="row"><div><label>Jenis pelatihan</label><input id="mt" list="tl"></div><div><label>Judul materi</label><input id="mj"></div></div><label>File (maks. 10 MB)</label><input type="file" id="mf"><p style="margin-top:12px"><button class="btn sm" data-a="mup">Unggah</button></p></div>`;
+  const ls=M.map((m,i)=>`<div class="panel"><b>${esc(m.title)}</b><br><span class="tag">${esc(m.type)} · ${esc(m.name)} · ${fmtS(m.size)}</span><p style="margin-top:10px"><button class="btn sm red" data-a="mdel" data-i="${i}">Hapus</button></p></div>`).join('')||'<div class="empty">Belum ada materi.</div>';
+  const ps=C.map((c,i)=>`<div class="panel"><b>${esc(c.name)}</b><br><span class="tag">${esc(c.type)} · ${c.acc?'Akses aktif':'Belum ada akses'}</span>${c.acc?`<p style="margin-top:8px">Kode akses: <b>${esc(c.code)}</b></p>`:''}<p style="margin-top:10px">${c.acc?`<button class="btn sm alt" data-a="mcopy" data-i="${i}">Salin pesan</button> <button class="btn sm red" data-a="mrev" data-i="${i}">Cabut akses</button>`:`<button class="btn sm" data-a="macc" data-i="${i}">Beri akses (sudah bayar)</button>`}</p></div>`).join('')||'<div class="empty">Belum ada peserta. Tambahkan di tab Sertifikat.</div>';
+  return up+'<h3 style="margin:22px 0 10px">Materi terunggah</h3>'+ls+'<h3 style="margin:22px 0 10px">Akses peserta</h3><p class="sub" style="margin-bottom:12px">Beri akses setelah peserta membayar. Kode dikirim ke peserta, lalu klik Simpan.</p>'+ps;
+}
 $('#cm').onclick=e=>{if(e.target.id==='cm')e.target.hidden=true};
 /* ===== Admin ===== */
 const F=(l,p,t)=>`<label>${l}</label>${t==='area'?`<textarea rows="4" data-p="${p}">${esc(get(p))}</textarea>`:`<input data-p="${p}" value="${esc(get(p))}">`}`;
 const IMG=(l,p)=>`<label>${l}</label><img class="thumb" src="${esc(get(p))}" alt="" ${get(p)?'':'hidden'}><input type="file" accept="image/*" data-up="${p}">`;
-const TABS={layanan:'Layanan',jenis:'Jenis layanan',profil:'Profil & foto',alamat:'Alamat',sertifikat:'Sertifikat',bayar:'Pembayaran'};
+const TABS={layanan:'Layanan',jenis:'Jenis layanan',profil:'Profil & foto',alamat:'Alamat',sertifikat:'Sertifikat',materi:'Materi',bayar:'Pembayaran'};
 function adm(){
   $('#tabs').innerHTML=Object.entries(TABS).map(([k,v])=>`<button class="chip ${tab===k?'on':''}" data-t="${k}">${v}</button>`).join('');
   let h='';
@@ -255,8 +289,8 @@ function adm(){
     h='<div class="panel">'+D.types.map((t,i)=>`<div class="row" style="align-items:end;margin-bottom:8px"><div>${F('Nama jenis',`types.${i}.name`)}</div><div><button class="btn sm red" data-a="del" data-k="types" data-i="${i}">Hapus</button></div></div>`).join('')+'</div><button class="btn" data-a="add-t">+ Tambah jenis</button>';
   }else if(tab==='profil'){
     h='<div class="panel">'+IMG('Foto profil','profile.photo')+F('Nama & gelar','profile.name')+F('Peran / jabatan','profile.role')+F('Judul utama (hero)','profile.tagline')+F('Kalimat pendukung hero','profile.sub','area')+F('Angka kepercayaan','profile.stat')+F('Tentang (profil)','profile.bio','area')+F('Nomor WhatsApp (format 62…)','profile.wa')+F('Link formulir pendaftaran terapi','profile.formUrl')+F('Link formulir pendaftaran pelatihan','profile.trainUrl')+F('Link Instagram','profile.ig')+F('Link TikTok','profile.tt')+F('Link YouTube','profile.yt')+'</div>';
-  }else if(tab==='sertifikat'){
-    if(C===null){h='<div class="panel">'+(CL?'Memuat data sertifikat… <button class="btn sm alt" data-a="creload">Coba lagi</button>':'Memuat…')+'</div>';if(!CL){CL=1;loadC()}}else h=certUI();
+  }else if(tab==='sertifikat'||tab==='materi'){
+    if(C===null){h='<div class="panel">'+(CL?'Memuat data sertifikat… <button class="btn sm alt" data-a="creload">Coba lagi</button>':'Memuat…')+'</div>';if(!CL){CL=1;loadC()}}else h=tab==='materi'?matUI():certUI();
   }else if(tab==='alamat'){
     h='<div class="panel">'+F('Alamat lengkap (tampil di bagian Lokasi dan footer)','profile.address','area')+F('Link Google Maps (opsional)','profile.maps')+'<p style="margin-top:12px;color:var(--mut);font-size:14px">Tip: buka lokasi di Google Maps, pilih Bagikan, lalu salin linknya ke kolom di atas.</p></div>';
   }else{
@@ -300,6 +334,23 @@ document.addEventListener('click',async e=>{
   if(a==='cpdf')dlPdf();
   if(a==='cpng')dlPng();
   if(a==='cclose')$('#cm').hidden=true;
+  if(a==='mopen')mOpen();
+  if(a==='mdl')mDl(I,b);
+  if(a==='macc'){C[I].acc=true;if(!C[I].code)C[I].code=genCode();CD=true;adm();msg('Klik Simpan agar akses berlaku.')}
+  if(a==='mrev'&&confirm('Cabut akses materi peserta ini?')){C[I].acc=false;CD=true;adm();msg('Klik Simpan agar berlaku.')}
+  if(a==='mcopy'){const c=C[I],tx='Halo '+c.name+', akses materi pelatihan "'+c.type+'" sudah aktif.\nBuka '+location.href.split('#')[0]+' lalu menu "Materi", masukkan kode akses: '+c.code;try{await navigator.clipboard.writeText(tx);msg('Pesan disalin, tinggal tempel ke WhatsApp.')}catch(x){prompt('Salin pesan ini:',tx)}}
+  if(a==='mup'){
+    const f=$('#mf').files[0],t=$('#mt').value.trim(),j=$('#mj').value.trim();
+    if(!t||!j||!f)return msg('Isi jenis pelatihan, judul, dan pilih file');
+    if(f.size>10*1048576)return msg('Ukuran file maksimal 10 MB');
+    msg('Mengunggah…');
+    try{
+      const b64=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result.split(',')[1]);r.onerror=no;r.readAsDataURL(f)});
+      const r=await post({action:'mat_upload',type:t,title:j,name:f.name,mime:f.type,base64:b64});
+      if(r.error)throw r.error;M=r.items;adm();msg('Materi terunggah.');
+    }catch(x){msg('Gagal: '+x)}
+  }
+  if(a==='mdel'&&confirm('Hapus materi ini?')){try{const r=await post({action:'mat_del',id:M[I].id});if(r.error)throw r.error;M=r.items;adm()}catch(x){msg('Gagal: '+x)}}
   if(a==='login'){
     if(!API.startsWith('http')){$('#lerr').textContent='URL Apps Script belum diisi di index.html.';return}
     PW=$('#pw').value;$('#lerr').textContent='Memeriksa…';
